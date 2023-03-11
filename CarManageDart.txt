@@ -1,0 +1,176 @@
+Main Dart file
+
+import 'package:flutter/material.dart';
+
+import 'Car.dart';
+import 'CarDetails.dart';
+
+void main() {
+  runApp(MaterialApp(home: MyDemoApp(),));
+}
+
+class MyDemoApp extends StatefulWidget {
+  MyDemoApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyDemoApp> createState() => _MyDemoAppState();
+}
+
+class _MyDemoAppState extends State<MyDemoApp> {
+  TextEditingController name = new TextEditingController();
+  TextEditingController color = new TextEditingController();
+  double price = 500000;
+  List<Car> cars = [];
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Withyou Car Management Portal"),),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          TextField(controller: name,decoration: InputDecoration(labelText: 'Car Name'),),
+          Text(price.toInt().toString()+' Dollars'),
+          Slider(activeColor:Colors.red,min:500000,max:15000000,value: price, onChanged: (value) {
+            price = value;
+            setState(() {
+
+            });
+
+          },),
+          TextField(controller: color,decoration: InputDecoration(labelText: 'Car Color'),),
+          ElevatedButton(onPressed: () {
+            Car newCar = new Car();
+            newCar.carName = name.text;
+            newCar.carPrice = price.toInt();
+            newCar.carColor = color.text;
+            cars.add(newCar);
+            print(cars);
+          }, child: Text("Save"))
+
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return CarDetails(cars);
+        },));
+      },child: Text('Next'),),
+    );
+  }
+}
+
+
+
+sECOND pAGE dART FILE
+
+import 'package:flutter/material.dart';
+
+import 'Car.dart';
+
+class CarDetails extends StatefulWidget {
+  List<Car> cars = [];
+  CarDetails(this.cars);
+
+  @override
+  State<CarDetails> createState() => _CarDetailsState();
+}
+
+class _CarDetailsState extends State<CarDetails> {
+  String nm = '';
+  int pr = 0;
+  String cr = '';
+  int ctr = 0;
+  String error = '';
+  TextEditingController colorSearch = new TextEditingController();
+  TextEditingController priceSearch = new TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Show Car Details'),),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text("Car Name : "+nm),
+          Text("Car Price : "+pr.toString()),
+          Text("Car Color : "+cr),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextField(controller: colorSearch,decoration: InputDecoration(labelText: "Enter color for search car"),),
+              TextField(controller: priceSearch,decoration: InputDecoration(labelText: "Enter price for search car"),),
+              ElevatedButton(onPressed: () {
+                ctr = 0;
+                nm = widget.cars[ctr].carName;
+                pr = widget.cars[ctr].carPrice;
+                cr = widget.cars[ctr].carColor;
+                print(widget.cars);
+                setState(() {
+
+                });
+              }, child: Text("First")),
+              ElevatedButton(onPressed: () {
+                if(ctr<widget.cars.length-1) {
+                  ctr = ctr + 1;
+                  nm = widget.cars[ctr].carName;
+                  pr = widget.cars[ctr].carPrice;
+                  cr = widget.cars[ctr].carColor;
+                  error = '';
+                }else{
+                  error = 'this is the first car';
+                }
+                  print(widget.cars);
+                  setState(() {
+
+                  });
+
+
+              }, child: Text("Next")),
+              ElevatedButton(onPressed: () {
+                if(ctr>0){
+                  ctr = ctr - 1;
+                  nm = widget.cars[ctr].carName;
+                  pr = widget.cars[ctr].carPrice;
+                  cr = widget.cars[ctr].carColor;
+                  error = '';
+                }else{
+                  error = "This is the Last car";
+                }
+                  print(widget.cars);
+                  setState(() {
+
+                  });
+
+
+              }, child: Text("Previous")),
+              ElevatedButton(onPressed: () {
+                for(int i=0;i<widget.cars.length;i++){
+
+                }
+              }, child: Text('Search')),
+              ElevatedButton(onPressed: () {
+                ctr = widget.cars.length-1;
+                nm = widget.cars[ctr].carName;
+                pr = widget.cars[ctr].carPrice;
+                cr = widget.cars[ctr].carColor;
+                print(widget.cars);
+                setState(() {
+
+                });
+              }, child: Text("Last")),
+            ],
+          ),
+          Text(error)
+        ],
+        
+      ),
+    );
+  }
+}
+
+
+
+cLASS dEFINITION
+class Car{
+  String carName = '';
+  int carPrice = 0;
+  String carColor = '';
+}
